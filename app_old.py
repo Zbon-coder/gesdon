@@ -73,77 +73,16 @@ def logout():
 def dashboard():
     donateurs = models.get_tous_donateurs()
     dons = models.get_tous_dons()
-    associations = models.get_toutes_associations()
 
     stats = {
         'total_donateurs': len(donateurs),
         'total_dons': len(dons),
-        'total_associations': len(associations)
+        'montant_total': sum(don['montant'] for don in dons)
     }
 
     derniers_dons = dons[:5]
 
     return render_template('dashboard.html', stats=stats, derniers_dons=derniers_dons)
-
-# ========== ROUTES CRUD ASSOCIATIONS ==========
-
-@app.route('/associations')
-@login_required
-def liste_associations():
-    associations = models.get_toutes_associations()
-    return render_template('associations.html', associations=associations)
-
-@app.route('/associations/ajouter', methods=['GET', 'POST'])
-@login_required
-def ajouter_association():
-    if request.method == 'POST':
-        NomA = request.form.get('NomA')
-        CompteBANK = request.form.get('CompteBANK')
-        tel = request.form.get('tel')
-        ville = request.form.get('ville')
-        pays = request.form.get('pays')
-
-        if models.creer_association(NomA, CompteBANK, tel, ville, pays):
-            flash('Association ajoutée avec succès !', 'success')
-            return redirect(url_for('liste_associations'))
-        else:
-            flash('Erreur lors de l\'ajout de l\'association.', 'danger')
-
-    return render_template('form_association.html', association=None)
-
-@app.route('/associations/modifier/<int:id>', methods=['GET', 'POST'])
-@login_required
-def modifier_association(id):
-    association = models.get_association_by_id(id)
-
-    if not association:
-        flash('Association non trouvée.', 'danger')
-        return redirect(url_for('liste_associations'))
-
-    if request.method == 'POST':
-        NomA = request.form.get('NomA')
-        CompteBANK = request.form.get('CompteBANK')
-        tel = request.form.get('tel')
-        ville = request.form.get('ville')
-        pays = request.form.get('pays')
-
-        if models.modifier_association(id, NomA, CompteBANK, tel, ville, pays):
-            flash('Association modifiée avec succès !', 'success')
-            return redirect(url_for('liste_associations'))
-        else:
-            flash('Erreur lors de la modification de l\'association.', 'danger')
-
-    return render_template('form_association.html', association=association)
-
-@app.route('/associations/supprimer/<int:id>')
-@login_required
-def supprimer_association(id):
-    if models.supprimer_association(id):
-        flash('Association supprimée avec succès !', 'success')
-    else:
-        flash('Erreur lors de la suppression de l\'association.', 'danger')
-
-    return redirect(url_for('liste_associations'))
 
 # ========== ROUTES CRUD DONATEURS ==========
 
@@ -158,12 +97,14 @@ def liste_donateurs():
 def ajouter_donateur():
     if request.method == 'POST':
         nom = request.form.get('nom')
-        tel = request.form.get('tel')
-        mail = request.form.get('mail')
-        BP = request.form.get('BP')
+        prenom = request.form.get('prenom')
+        telephone = request.form.get('telephone')
+        email = request.form.get('email')
+        adresse = request.form.get('adresse')
         ville = request.form.get('ville')
+        code_postal = request.form.get('code_postal')
 
-        if models.creer_donateur(nom, tel, mail, BP, ville):
+        if models.creer_donateur(nom, prenom, telephone, email, adresse, ville, code_postal):
             flash('Donateur ajouté avec succès !', 'success')
             return redirect(url_for('liste_donateurs'))
         else:
@@ -182,12 +123,14 @@ def modifier_donateur(id):
 
     if request.method == 'POST':
         nom = request.form.get('nom')
-        tel = request.form.get('tel')
-        mail = request.form.get('mail')
-        BP = request.form.get('BP')
+        prenom = request.form.get('prenom')
+        telephone = request.form.get('telephone')
+        email = request.form.get('email')
+        adresse = request.form.get('adresse')
         ville = request.form.get('ville')
+        code_postal = request.form.get('code_postal')
 
-        if models.modifier_donateur(id, nom, tel, mail, BP, ville):
+        if models.modifier_donateur(id, nom, prenom, telephone, email, adresse, ville, code_postal):
             flash('Donateur modifié avec succès !', 'success')
             return redirect(url_for('liste_donateurs'))
         else:
@@ -217,46 +160,44 @@ def liste_dons():
 @login_required
 def ajouter_don():
     donateurs = models.get_tous_donateurs()
-    associations = models.get_toutes_associations()
 
     if request.method == 'POST':
-        libelle = request.form.get('libelle')
-        description = request.form.get('description')
-        IdA = request.form.get('IdA')
         id_donateur = request.form.get('id_donateur')
+        montant = request.form.get('montant')
+        type_don = request.form.get('type_don')
+        description = request.form.get('description')
 
-        if models.creer_don(libelle, description, IdA, id_donateur):
+        if models.creer_don(id_donateur, montant, type_don, description):
             flash('Don enregistré avec succès !', 'success')
             return redirect(url_for('liste_dons'))
         else:
             flash('Erreur lors de l\'enregistrement du don.', 'danger')
 
-    return render_template('form_don.html', don=None, donateurs=donateurs, associations=associations)
+    return render_template('form_don.html', don=None, donateurs=donateurs)
 
 @app.route('/dons/modifier/<int:id>', methods=['GET', 'POST'])
 @login_required
 def modifier_don(id):
     don = models.get_don_by_id(id)
     donateurs = models.get_tous_donateurs()
-    associations = models.get_toutes_associations()
 
     if not don:
         flash('Don non trouvé.', 'danger')
         return redirect(url_for('liste_dons'))
 
     if request.method == 'POST':
-        libelle = request.form.get('libelle')
-        description = request.form.get('description')
-        IdA = request.form.get('IdA')
         id_donateur = request.form.get('id_donateur')
+        montant = request.form.get('montant')
+        type_don = request.form.get('type_don')
+        description = request.form.get('description')
 
-        if models.modifier_don(id, libelle, description, IdA, id_donateur):
+        if models.modifier_don(id, id_donateur, montant, type_don, description):
             flash('Don modifié avec succès !', 'success')
             return redirect(url_for('liste_dons'))
         else:
             flash('Erreur lors de la modification du don.', 'danger')
 
-    return render_template('form_don.html', don=don, donateurs=donateurs, associations=associations)
+    return render_template('form_don.html', don=don, donateurs=donateurs)
 
 @app.route('/dons/supprimer/<int:id>')
 @login_required

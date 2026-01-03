@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord - Gestion de Dons{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Tableau de bord</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Total Donateurs</h5>
+                        <h2 class="mb-0">{{ stats.total_donateurs }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-people" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="{{ url_for('liste_donateurs') }}" class="text-white text-decoration-none">
+                    Voir tous les donateurs <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Total Dons</h5>
+                        <h2 class="mb-0">{{ stats.total_dons }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-gift" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="{{ url_for('liste_dons') }}" class="text-white text-decoration-none">
+                    Voir tous les dons <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Total Associations</h5>
+                        <h2 class="mb-0">{{ stats.total_associations }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-building" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="{{ url_for('liste_associations') }}" class="text-white text-decoration-none">
+                    Voir toutes les associations <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Derniers Dons</h5>
+            </div>
+            <div class="card-body">
+                {% if derniers_dons %}
+                <div class="list-group list-group-flush">
+                    {% for don in derniers_dons %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ don.libelle }}</strong><br>
+                                <small class="text-muted">{{ don.donateur_nom }}</small><br>
+                                <small class="badge bg-primary">{{ don.association_nom }}</small>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted">{{ don.date_don.strftime('%d/%m/%Y') if don.date_don else '-' }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Aucun don enregistré</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Actions rapides</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('ajouter_association') }}" class="btn btn-info btn-lg text-white">
+                        <i class="bi bi-building"></i> Ajouter une association
+                    </a>
+                    <a href="{{ url_for('ajouter_donateur') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-person-plus"></i> Ajouter un donateur
+                    </a>
+                    <a href="{{ url_for('ajouter_don') }}" class="btn btn-success btn-lg">
+                        <i class="bi bi-gift"></i> Enregistrer un don
+                    </a>
+                    <a href="{{ url_for('liste_associations') }}" class="btn btn-outline-info btn-lg">
+                        <i class="bi bi-building"></i> Gérer les associations
+                    </a>
+                    <a href="{{ url_for('liste_donateurs') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-people"></i> Gérer les donateurs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Modifier' if donateur else 'Ajouter' }} un Donateur{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>
+                    <i class="bi bi-person"></i>
+                    {{ 'Modifier' if donateur else 'Ajouter' }} un Donateur
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Nom Complet <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="nom" name="nom"
+                               value="{{ donateur.nom if donateur else '' }}"
+                               placeholder="Ex: Dupont Jean" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tel" class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="tel" name="tel"
+                                   value="{{ donateur.tel if donateur else '' }}"
+                                   placeholder="+229 61 23 45 67">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="mail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="mail" name="mail"
+                                   value="{{ donateur.mail if donateur else '' }}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="BP" class="form-label">Boîte Postale (BP)</label>
+                            <input type="text" class="form-control" id="BP" name="BP"
+                                   value="{{ donateur.BP if donateur else '' }}"
+                                   placeholder="BP 123">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ville" class="form-label">Ville</label>
+                            <input type="text" class="form-control" id="ville" name="ville"
+                                   value="{{ donateur.ville if donateur else '' }}">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('liste_donateurs') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> {{ 'Modifier' if donateur else 'Ajouter' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

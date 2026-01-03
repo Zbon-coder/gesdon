@@ -1,24 +1,44 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+{% extends "base.html" %}
 
+{% block title %}Inscription - Gestion de Dons{% endblock %}
 
-    <form method="post">
-    <input type="text" name="nom" placeholder="Nom" required>
-    <input type="text" name="tel" placeholder="Téléphone">
-    <input type="email" name="mail" placeholder="Email" required>
-    <input type="text" name="bp" placeholder="BP">
-    <input type="text" name="ville" placeholder="Ville">
-    <button type="submit">S'inscrire</button>
-</form>
-
-
-</head>
-<body>
-    
-</body>
-</html>
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header bg-success text-white text-center">
+                <h4><i class="bi bi-person-plus"></i> Inscription</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('register') }}">
+                    <div class="mb-3">
+                        <label for="nom_utilisateur" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="nom_utilisateur" name="nom_utilisateur" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mot_de_passe" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmer_mot_de_passe" class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" class="form-control" id="confirmer_mot_de_passe" name="confirmer_mot_de_passe" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-person-plus"></i> S'inscrire
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small>Déjà un compte ? <a href="{{ url_for('login') }}">Se connecter</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 

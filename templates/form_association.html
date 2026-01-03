@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Modifier' if association else 'Ajouter' }} une Association{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>
+                    <i class="bi bi-building"></i>
+                    {{ 'Modifier' if association else 'Ajouter' }} une Association
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="NomA" class="form-label">Nom de l'Association <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="NomA" name="NomA"
+                               value="{{ association.NomA if association else '' }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="CompteBANK" class="form-label">Compte Bancaire</label>
+                        <input type="text" class="form-control" id="CompteBANK" name="CompteBANK"
+                               value="{{ association.CompteBANK if association else '' }}"
+                               placeholder="BJ12345678901234567890">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tel" class="form-label">Téléphone</label>
+                            <input type="tel" class="form-control" id="tel" name="tel"
+                                   value="{{ association.tel if association else '' }}"
+                                   placeholder="+229 12 34 56 78">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="ville" class="form-label">Ville</label>
+                            <input type="text" class="form-control" id="ville" name="ville"
+                                   value="{{ association.ville if association else '' }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pays" class="form-label">Pays</label>
+                        <input type="text" class="form-control" id="pays" name="pays"
+                               value="{{ association.pays if association else 'Benin' }}">
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('liste_associations') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> {{ 'Modifier' if association else 'Ajouter' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
