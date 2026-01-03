@@ -68,7 +68,7 @@
     <div class="lg:col-span-2">
         <div class="glass rounded-2xl shadow-xl overflow-hidden">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+            <div class="bg-purple-600 px-6 py-4">
                 <div class="flex items-center justify-between">
                     <h2 class="text-xl font-bold text-white flex items-center">
                         <i class="bi bi-clock-history mr-2"></i> Derniers Dons
@@ -86,7 +86,7 @@
                     {% for don in derniers_dons %}
                     <div class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-200 border border-gray-100">
                         <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+                            <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center shadow-md">
                                 <i class="bi bi-gift text-white text-xl"></i>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                 <div class="text-center py-12">
                     <i class="bi bi-inbox text-6xl text-gray-300"></i>
                     <p class="text-gray-500 mt-4 text-lg">Aucun don enregistré</p>
-                    <a href="{{ url_for('ajouter_don') }}" class="inline-flex items-center px-4 py-2 mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-200">
+                    <a href="{{ url_for('ajouter_don') }}" class="inline-flex items-center px-4 py-2 mt-4 bg-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-200">
                         <i class="bi bi-plus-circle mr-2"></i> Ajouter un don
                     </a>
                 </div>
@@ -129,7 +129,7 @@
     <div class="lg:col-span-1">
         <div class="glass rounded-2xl shadow-xl overflow-hidden">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+            <div class="bg-purple-600 px-6 py-4">
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <i class="bi bi-lightning-charge-fill mr-2"></i> Actions Rapides
                 </h2>
@@ -137,13 +137,13 @@
 
             <!-- Content -->
             <div class="p-6 space-y-3">
-                <a href="{{ url_for('ajouter_don') }}" class="block w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                <a href="{{ url_for('ajouter_don') }}" class="block w-full bg-green-500 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
                     <i class="bi bi-gift mr-2"></i> Enregistrer un don
                 </a>
-                <a href="{{ url_for('ajouter_donateur') }}" class="block w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                <a href="{{ url_for('ajouter_donateur') }}" class="block w-full bg-blue-500 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
                     <i class="bi bi-person-plus mr-2"></i> Ajouter un donateur
                 </a>
-                <a href="{{ url_for('ajouter_association') }}" class="block w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                <a href="{{ url_for('ajouter_association') }}" class="block w-full bg-purple-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
                     <i class="bi bi-building-add mr-2"></i> Ajouter une association
                 </a>
 
@@ -163,7 +163,7 @@
 <!-- Graphique évolution -->
 <div class="mt-6">
     <div class="glass rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+        <div class="bg-purple-600 px-6 py-4">
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-bold text-white flex items-center">
                     <i class="bi bi-graph-up mr-2"></i> Évolution des Dons (7 derniers jours)

@@ -8,7 +8,7 @@
     <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
         <!-- Avatar -->
         <div class="flex-shrink-0">
-            <div class="w-32 h-32 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white shadow-2xl ring-4 ring-white">
+            <div class="w-32 h-32 bg-purple-600 rounded-full flex items-center justify-center text-white shadow-2xl ring-4 ring-white">
                 <i class="bi bi-person-fill text-6xl"></i>
             </div>
         </div>
@@ -27,7 +27,7 @@
 
         <!-- Edit Button -->
         <div class="flex-shrink-0">
-            <button onclick="document.getElementById('editProfileModal').classList.remove('hidden')" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium">
+            <button onclick="document.getElementById('editProfileModal').classList.remove('hidden')" class="px-6 py-3 bg-purple-600 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium">
                 <i class="bi bi-pencil-square mr-2"></i> Modifier le profil
             </button>
         </div>
@@ -65,7 +65,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <!-- Personal Information -->
     <div class="glass rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+        <div class="bg-purple-600 px-6 py-4">
             <h2 class="text-xl font-bold text-white flex items-center">
                 <i class="bi bi-person-badge mr-2"></i> Informations Personnelles
             </h2>
@@ -99,7 +99,7 @@
 
     <!-- Recent Activity -->
     <div class="glass rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+        <div class="bg-purple-600 px-6 py-4">
             <h2 class="text-xl font-bold text-white flex items-center">
                 <i class="bi bi-activity mr-2"></i> Activité Récente
             </h2>
@@ -110,7 +110,7 @@
                 {% for don in derniers_dons %}
                 <div class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-all duration-200">
                     <div class="flex-shrink-0">
-                        <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
                             <i class="bi bi-gift text-white"></i>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
 
 <!-- Security Section -->
 <div class="glass rounded-2xl shadow-xl overflow-hidden">
-    <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+    <div class="bg-purple-600 px-6 py-4">
         <h2 class="text-xl font-bold text-white flex items-center">
             <i class="bi bi-shield-lock mr-2"></i> Sécurité
         </h2>
@@ -167,7 +167,7 @@
 <!-- Edit Profile Modal -->
 <div id="editProfileModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 rounded-t-2xl">
+        <div class="bg-purple-600 px-6 py-4 rounded-t-2xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-xl font-bold text-white flex items-center">
                     <i class="bi bi-pencil-square mr-2"></i> Modifier le profil
@@ -193,7 +193,7 @@
                 <button type="button" onclick="document.getElementById('editProfileModal').classList.add('hidden')" class="flex-1 px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium">
                     Annuler
                 </button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
+                <button type="submit" class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
                     <i class="bi bi-save mr-2"></i> Enregistrer
                 </button>
             </div>
@@ -204,7 +204,7 @@
 <!-- Change Password Modal -->
 <div id="changePasswordModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 rounded-t-2xl">
+        <div class="bg-purple-600 px-6 py-4 rounded-t-2xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-xl font-bold text-white flex items-center">
                     <i class="bi bi-key mr-2"></i> Changer le mot de passe
@@ -234,7 +234,7 @@
                 <button type="button" onclick="document.getElementById('changePasswordModal').classList.add('hidden')" class="flex-1 px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium">
                     Annuler
                 </button>
-                <button type="submit" class="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
+                <button type="submit" class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
                     <i class="bi bi-check-circle mr-2"></i> Changer
                 </button>
             </div>
