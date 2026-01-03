@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block content %}
+<!-- Header du profil -->
+<div class="profile-header">
+    <div class="row align-items-center">
+        <div class="col-md-auto text-center text-md-start mb-3 mb-md-0">
+            <div class="profile-avatar mx-auto mx-md-0">
+                <i class="bi bi-person-fill"></i>
+            </div>
+        </div>
+        <div class="col-md">
+            <h2 class="mb-2">{{ session.user_nom }}</h2>
+            <p class="mb-1"><i class="bi bi-envelope"></i> {{ session.user_email }}</p>
+            <p class="mb-0"><i class="bi bi-shield-check"></i> Administrateur</p>
+        </div>
+        <div class="col-md-auto text-center text-md-end mt-3 mt-md-0">
+            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                <i class="bi bi-pencil-square"></i> Modifier le profil
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques de l'admin -->
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card h-100 hover-scale">
+            <div class="card-body text-center">
+                <i class="bi bi-trophy-fill text-warning" style="font-size: 3rem;"></i>
+                <h3 class="mt-3 mb-1">{{ stats.total_dons }}</h3>
+                <p class="text-muted mb-0">Dons gérés</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card h-100 hover-scale">
+            <div class="card-body text-center">
+                <i class="bi bi-people-fill text-primary" style="font-size: 3rem;"></i>
+                <h3 class="mt-3 mb-1">{{ stats.total_donateurs }}</h3>
+                <p class="text-muted mb-0">Donateurs actifs</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card h-100 hover-scale">
+            <div class="card-body text-center">
+                <i class="bi bi-building text-info" style="font-size: 3rem;"></i>
+                <h3 class="mt-3 mb-1">{{ stats.total_associations }}</h3>
+                <p class="text-muted mb-0">Associations</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card h-100 hover-scale">
+            <div class="card-body text-center">
+                <i class="bi bi-calendar-check text-success" style="font-size: 3rem;"></i>
+                <h3 class="mt-3 mb-1">{{ jours_activite }}</h3>
+                <p class="text-muted mb-0">Jours d'activité</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Informations personnelles -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5><i class="bi bi-person-badge"></i> Informations Personnelles</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label text-muted">Nom d'utilisateur</label>
+                    <p class="h6">{{ utilisateur.nom_utilisateur }}</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">Adresse e-mail</label>
+                    <p class="h6">{{ utilisateur.email }}</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">Membre depuis</label>
+                    <p class="h6">
+                        <i class="bi bi-calendar-event"></i>
+                        {{ utilisateur.date_creation.strftime('%d/%m/%Y') if utilisateur.date_creation else '-' }}
+                    </p>
+                </div>
+                <div class="mb-0">
+                    <label class="form-label text-muted">Rôle</label>
+                    <p class="h6">
+                        <span class="badge bg-primary">
+                            <i class="bi bi-shield-check"></i> Administrateur
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activité récente -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5><i class="bi bi-activity"></i> Activité Récente</h5>
+            </div>
+            <div class="card-body">
+                {% if derniers_dons %}
+                <div class="list-group list-group-flush">
+                    {% for don in derniers_dons %}
+                    <div class="list-group-item px-0">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                    <i class="bi bi-gift text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ don.libelle }}</h6>
+                                <small class="text-muted">
+                                    {{ don.donateur_nom }} → {{ don.association_nom }}
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ don.date_don.strftime('%d/%m/%Y') if don.date_don else '-' }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-4">Aucune activité récente</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sécurité -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-shield-lock"></i> Sécurité</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                    <div>
+                        <h6 class="mb-1">Mot de passe</h6>
+                        <p class="text-muted mb-0 small">Dernière modification : N/A</p>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="bi bi-key"></i> Modifier
+                    </button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Sessions actives</h6>
+                        <p class="text-muted mb-0 small">Actuellement connecté sur cet appareil</p>
+                    </div>
+                    <span class="badge bg-success">Actif</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Modifier le profil -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">
+                    <i class="bi bi-pencil-square"></i> Modifier le profil
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('profil') }}">
+                <input type="hidden" name="action" value="update_profile">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nom_utilisateur" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="nom_utilisateur" name="nom_utilisateur"
+                               value="{{ utilisateur.nom_utilisateur }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Adresse e-mail</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               value="{{ utilisateur.email }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Changer le mot de passe -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">
+                    <i class="bi bi-key"></i> Changer le mot de passe
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('profil') }}">
+                <input type="hidden" name="action" value="change_password">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="ancien_mot_de_passe" class="form-label">Ancien mot de passe</label>
+                        <input type="password" class="form-control" id="ancien_mot_de_passe"
+                               name="ancien_mot_de_passe" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nouveau_mot_de_passe" class="form-label">Nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="nouveau_mot_de_passe"
+                               name="nouveau_mot_de_passe" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmer_mot_de_passe" class="form-label">Confirmer le nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="confirmer_mot_de_passe"
+                               name="confirmer_mot_de_passe" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Changer le mot de passe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

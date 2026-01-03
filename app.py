@@ -268,5 +268,107 @@ def supprimer_don(id):
 
     return redirect(url_for('liste_dons'))
 
+# ========== PAGE HISTORIQUE ==========
+
+@app.route('/historique')
+@login_required
+def historique():
+    periode = request.args.get('periode', 'tout')
+    association_filter = request.args.get('association', '')
+    donateur_filter = request.args.get('donateur', '')
+
+    # Obtenir les dons filtrés
+    dons = models.get_dons_filtres(
+        periode=periode if periode != 'tout' else None,
+        association_id=int(association_filter) if association_filter else None,
+        donateur_id=int(donateur_filter) if donateur_filter else None
+    )
+
+    # Statistiques
+    total_dons = models.compter_dons_par_periode('tout')
+    dons_mois = models.compter_dons_par_periode('mois')
+    dons_semaine = models.compter_dons_par_periode('semaine')
+    dons_aujourdhui = models.compter_dons_par_periode('aujourdhui')
+
+    # Pour les filtres
+    associations = models.get_toutes_associations()
+    donateurs = models.get_tous_donateurs()
+
+    return render_template('historique.html',
+                         dons=dons,
+                         total_dons=total_dons,
+                         dons_mois=dons_mois,
+                         dons_semaine=dons_semaine,
+                         dons_aujourdhui=dons_aujourdhui,
+                         associations=associations,
+                         donateurs=donateurs,
+                         periode=periode,
+                         association_filter=association_filter,
+                         donateur_filter=donateur_filter)
+
+# ========== PAGE PROFIL ==========
+
+@app.route('/profil', methods=['GET', 'POST'])
+@login_required
+def profil():
+    if request.method == 'POST':
+        action = request.form.get('action')
+
+        if action == 'update_profile':
+            nom_utilisateur = request.form.get('nom_utilisateur')
+            email = request.form.get('email')
+
+            if models.modifier_utilisateur(session['user_id'], nom_utilisateur, email):
+                session['user_nom'] = nom_utilisateur
+                session['user_email'] = email
+                flash('Profil mis à jour avec succès !', 'success')
+            else:
+                flash('Erreur lors de la mise à jour du profil.', 'danger')
+
+        elif action == 'change_password':
+            ancien_mot_de_passe = request.form.get('ancien_mot_de_passe')
+            nouveau_mot_de_passe = request.form.get('nouveau_mot_de_passe')
+            confirmer_mot_de_passe = request.form.get('confirmer_mot_de_passe')
+
+            # Vérifier l'ancien mot de passe
+            utilisateur = models.verifier_utilisateur(session['user_email'], ancien_mot_de_passe)
+            if not utilisateur:
+                flash('Ancien mot de passe incorrect.', 'danger')
+            elif nouveau_mot_de_passe != confirmer_mot_de_passe:
+                flash('Les nouveaux mots de passe ne correspondent pas.', 'danger')
+            elif models.changer_mot_de_passe(session['user_id'], nouveau_mot_de_passe):
+                flash('Mot de passe changé avec succès !', 'success')
+            else:
+                flash('Erreur lors du changement de mot de passe.', 'danger')
+
+        return redirect(url_for('profil'))
+
+    # GET request
+    utilisateur = models.get_utilisateur_by_id(session['user_id'])
+    dons = models.get_tous_dons()
+    donateurs = models.get_tous_donateurs()
+    associations = models.get_toutes_associations()
+
+    stats = {
+        'total_dons': len(dons),
+        'total_donateurs': len(donateurs),
+        'total_associations': len(associations)
+    }
+
+    derniers_dons = dons[:5]
+
+    # Calculer les jours d'activité (depuis la création du compte)
+    from datetime import datetime
+    if utilisateur.get('date_creation'):
+        jours_activite = (datetime.now() - utilisateur['date_creation']).days
+    else:
+        jours_activite = 0
+
+    return render_template('profil.html',
+                         utilisateur=utilisateur,
+                         stats=stats,
+                         derniers_dons=derniers_dons,
+                         jours_activite=jours_activite)
+
 if __name__ == "__main__":
     app.run(debug=True)

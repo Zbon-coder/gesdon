@@ -48,7 +48,8 @@ def get_utilisateur_by_id(id_utilisateur):
             return {
                 'id': utilisateur[0],
                 'nom_utilisateur': utilisateur[1],
-                'email': utilisateur[2]
+                'email': utilisateur[2],
+                'date_creation': utilisateur[4] if len(utilisateur) > 4 else None
             }
         return None
     finally:
@@ -367,6 +368,118 @@ def get_dons_par_donateur(id_donateur):
             'description': don[2],
             'date_don': don[3]
         } for don in dons]
+    finally:
+        cursor.close()
+        conn.close()
+
+# ========== FONCTIONS POUR PROFIL & HISTORIQUE ==========
+
+def modifier_utilisateur(id_utilisateur, nom_utilisateur, email):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            """UPDATE Utilisateurs
+               SET nom_utilisateur=?, email=?
+               WHERE id_utilisateur=?""",
+            (nom_utilisateur, email, id_utilisateur)
+        )
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Erreur lors de la modification de l'utilisateur: {e}")
+        return False
+    finally:
+        cursor.close()
+        conn.close()
+
+def changer_mot_de_passe(id_utilisateur, nouveau_mot_de_passe):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        mot_de_passe_hash = generate_password_hash(nouveau_mot_de_passe)
+        cursor.execute(
+            """UPDATE Utilisateurs
+               SET mot_de_passe=?
+               WHERE id_utilisateur=?""",
+            (mot_de_passe_hash, id_utilisateur)
+        )
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Erreur lors du changement de mot de passe: {e}")
+        return False
+    finally:
+        cursor.close()
+        conn.close()
+
+def get_dons_filtres(periode=None, association_id=None, donateur_id=None):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        query = """SELECT d.IdD, d.libelle, d.description, d.date_don,
+                          a.NomA, a.IdA,
+                          don.nom, don.id
+                   FROM Don d
+                   INNER JOIN Association a ON d.IdA = a.IdA
+                   INNER JOIN Donateur don ON d.id = don.id
+                   WHERE 1=1"""
+        params = []
+
+        # Filtrage par période
+        if periode == 'aujourdhui':
+            query += " AND CAST(d.date_don AS DATE) = CAST(GETDATE() AS DATE)"
+        elif periode == 'semaine':
+            query += " AND d.date_don >= DATEADD(day, -7, GETDATE())"
+        elif periode == 'mois':
+            query += " AND d.date_don >= DATEADD(month, -1, GETDATE())"
+        elif periode == 'annee':
+            query += " AND d.date_don >= DATEADD(year, -1, GETDATE())"
+
+        # Filtrage par association
+        if association_id:
+            query += " AND d.IdA = ?"
+            params.append(association_id)
+
+        # Filtrage par donateur
+        if donateur_id:
+            query += " AND d.id = ?"
+            params.append(donateur_id)
+
+        query += " ORDER BY d.date_don DESC"
+
+        cursor.execute(query, params)
+        dons = cursor.fetchall()
+        return [{
+            'IdD': don[0],
+            'libelle': don[1],
+            'description': don[2],
+            'date_don': don[3],
+            'association_nom': don[4],
+            'IdA': don[5],
+            'donateur_nom': don[6],
+            'id_donateur': don[7]
+        } for don in dons]
+    finally:
+        cursor.close()
+        conn.close()
+
+def compter_dons_par_periode(periode):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        if periode == 'aujourdhui':
+            query = "SELECT COUNT(*) FROM Don WHERE CAST(date_don AS DATE) = CAST(GETDATE() AS DATE)"
+        elif periode == 'semaine':
+            query = "SELECT COUNT(*) FROM Don WHERE date_don >= DATEADD(day, -7, GETDATE())"
+        elif periode == 'mois':
+            query = "SELECT COUNT(*) FROM Don WHERE date_don >= DATEADD(month, -1, GETDATE())"
+        else:
+            query = "SELECT COUNT(*) FROM Don"
+
+        cursor.execute(query)
+        result = cursor.fetchone()
+        return result[0] if result else 0
     finally:
         cursor.close()
         conn.close()
