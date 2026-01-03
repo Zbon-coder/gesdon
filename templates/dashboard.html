@@ -1,100 +1,111 @@
 {% extends "base.html" %}
 
-{% block title %}Tableau de bord - Gestion de Dons{% endblock %}
+{% block title %}Tableau de bord - GesDon{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-12">
-        <h2 class="text-gradient"><i class="bi bi-speedometer2"></i> Tableau de bord</h2>
-        <p class="text-muted">Bienvenue, {{ session.user_nom }} ! Voici un aperçu de votre activité.</p>
+<!-- Header -->
+<div class="mb-8">
+    <h1 class="text-4xl font-bold text-white mb-2">
+        <i class="bi bi-speedometer2"></i> Tableau de bord
+    </h1>
+    <p class="text-white/80 text-lg">Bienvenue, <span class="font-semibold">{{ session.user_nom }}</span> ! Voici un aperçu de votre activité.</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Total Donateurs -->
+    <div class="glass rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Donateurs</p>
+                <p class="text-4xl font-bold text-gray-900 mt-2">{{ stats.total_donateurs }}</p>
+                <a href="{{ url_for('liste_donateurs') }}" class="inline-flex items-center text-sm text-purple-600 hover:text-purple-700 mt-3 font-medium">
+                    Voir tous <i class="bi bi-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i class="bi bi-people text-3xl text-white"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Dons -->
+    <div class="glass rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Dons</p>
+                <p class="text-4xl font-bold text-gray-900 mt-2">{{ stats.total_dons }}</p>
+                <a href="{{ url_for('liste_dons') }}" class="inline-flex items-center text-sm text-purple-600 hover:text-purple-700 mt-3 font-medium">
+                    Voir tous <i class="bi bi-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i class="bi bi-gift text-3xl text-white"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Associations -->
+    <div class="glass rounded-2xl shadow-xl p-6 transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium uppercase tracking-wide">Total Associations</p>
+                <p class="text-4xl font-bold text-gray-900 mt-2">{{ stats.total_associations }}</p>
+                <a href="{{ url_for('liste_associations') }}" class="inline-flex items-center text-sm text-purple-600 hover:text-purple-700 mt-3 font-medium">
+                    Voir toutes <i class="bi bi-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i class="bi bi-building text-3xl text-white"></i>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4 mb-4">
-        <div class="card stats-card stats-card-primary hover-scale">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Total Donateurs</h6>
-                <h2>{{ stats.total_donateurs }}</h2>
-                <i class="bi bi-people stats-icon"></i>
-                <div class="mt-3">
-                    <a href="{{ url_for('liste_donateurs') }}" class="text-white text-decoration-none small">
-                        Voir tous les donateurs <i class="bi bi-arrow-right"></i>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Derniers Dons -->
+    <div class="lg:col-span-2">
+        <div class="glass rounded-2xl shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white flex items-center">
+                        <i class="bi bi-clock-history mr-2"></i> Derniers Dons
+                    </h2>
+                    <a href="{{ url_for('historique') }}" class="text-white/90 hover:text-white text-sm font-medium flex items-center bg-white/20 px-3 py-1 rounded-lg hover:bg-white/30 transition-all duration-200">
+                        Voir tout <i class="bi bi-arrow-right ml-1"></i>
                     </a>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="col-md-4 mb-4">
-        <div class="card stats-card stats-card-success hover-scale">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Total Dons</h6>
-                <h2>{{ stats.total_dons }}</h2>
-                <i class="bi bi-gift stats-icon"></i>
-                <div class="mt-3">
-                    <a href="{{ url_for('liste_dons') }}" class="text-white text-decoration-none small">
-                        Voir tous les dons <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 mb-4">
-        <div class="card stats-card stats-card-info hover-scale">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Total Associations</h6>
-                <h2>{{ stats.total_associations }}</h2>
-                <i class="bi bi-building stats-icon"></i>
-                <div class="mt-3">
-                    <a href="{{ url_for('liste_associations') }}" class="text-white text-decoration-none small">
-                        Voir toutes les associations <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4">
-    <div class="col-lg-7 mb-4">
-        <div class="card h-100">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Derniers Dons</h5>
-                    <a href="{{ url_for('historique') }}" class="btn btn-sm btn-outline-light">
-                        Voir tout <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
+            <!-- Content -->
+            <div class="p-6">
                 {% if derniers_dons %}
-                <div class="list-group list-group-flush">
+                <div class="space-y-4">
                     {% for don in derniers_dons %}
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex align-items-start">
-                            <div class="me-3">
-                                <div class="bg-success bg-opacity-10 rounded-circle p-2">
-                                    <i class="bi bi-gift text-success"></i>
-                                </div>
+                    <div class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-200 border border-gray-100">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+                                <i class="bi bi-gift text-white text-xl"></i>
                             </div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="mb-1">{{ don.libelle }}</h6>
-                                        <small class="text-muted">
-                                            <i class="bi bi-person"></i> {{ don.donateur_nom }}
-                                        </small>
-                                        <br>
-                                        <span class="badge bg-primary mt-1">{{ don.association_nom }}</span>
-                                    </div>
-                                    <div class="text-end">
-                                        <small class="text-muted">
-                                            <i class="bi bi-calendar3"></i>
-                                            {{ don.date_don.strftime('%d/%m/%Y') if don.date_don else '-' }}
-                                        </small>
-                                    </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h3 class="text-base font-semibold text-gray-900">{{ don.libelle }}</h3>
+                                    <p class="text-sm text-gray-600 mt-1 flex items-center">
+                                        <i class="bi bi-person mr-1"></i> {{ don.donateur_nom }}
+                                    </p>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mt-2">
+                                        {{ don.association_nom }}
+                                    </span>
+                                </div>
+                                <div class="flex-shrink-0 text-right">
+                                    <p class="text-xs text-gray-500 flex items-center">
+                                        <i class="bi bi-calendar3 mr-1"></i>
+                                        {{ don.date_don.strftime('%d/%m/%Y') if don.date_don else '-' }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -102,41 +113,145 @@
                     {% endfor %}
                 </div>
                 {% else %}
-                <div class="text-center py-4">
-                    <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
-                    <p class="text-muted mt-2">Aucun don enregistré</p>
+                <div class="text-center py-12">
+                    <i class="bi bi-inbox text-6xl text-gray-300"></i>
+                    <p class="text-gray-500 mt-4 text-lg">Aucun don enregistré</p>
+                    <a href="{{ url_for('ajouter_don') }}" class="inline-flex items-center px-4 py-2 mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-200">
+                        <i class="bi bi-plus-circle mr-2"></i> Ajouter un don
+                    </a>
                 </div>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="col-lg-5 mb-4">
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Actions Rapides</h5>
+    <!-- Actions Rapides -->
+    <div class="lg:col-span-1">
+        <div class="glass rounded-2xl shadow-xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="bi bi-lightning-charge-fill mr-2"></i> Actions Rapides
+                </h2>
             </div>
-            <div class="card-body">
-                <div class="d-grid gap-3">
-                    <a href="{{ url_for('ajouter_don') }}" class="btn btn-success btn-lg">
-                        <i class="bi bi-gift"></i> Enregistrer un don
+
+            <!-- Content -->
+            <div class="p-6 space-y-3">
+                <a href="{{ url_for('ajouter_don') }}" class="block w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                    <i class="bi bi-gift mr-2"></i> Enregistrer un don
+                </a>
+                <a href="{{ url_for('ajouter_donateur') }}" class="block w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                    <i class="bi bi-person-plus mr-2"></i> Ajouter un donateur
+                </a>
+                <a href="{{ url_for('ajouter_association') }}" class="block w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-3 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                    <i class="bi bi-building-add mr-2"></i> Ajouter une association
+                </a>
+
+                <div class="border-t border-gray-200 pt-3 mt-3">
+                    <a href="{{ url_for('historique') }}" class="block w-full border-2 border-purple-600 text-purple-600 px-4 py-3 rounded-xl font-medium hover:bg-purple-50 transition-all duration-200 text-center">
+                        <i class="bi bi-clock-history mr-2"></i> Voir l'historique complet
                     </a>
-                    <a href="{{ url_for('ajouter_donateur') }}" class="btn btn-primary btn-lg">
-                        <i class="bi bi-person-plus"></i> Ajouter un donateur
-                    </a>
-                    <a href="{{ url_for('ajouter_association') }}" class="btn btn-info btn-lg text-white">
-                        <i class="bi bi-building-add"></i> Ajouter une association
-                    </a>
-                    <hr class="my-2">
-                    <a href="{{ url_for('historique') }}" class="btn btn-outline-primary">
-                        <i class="bi bi-clock-history"></i> Voir l'historique complet
-                    </a>
-                    <a href="{{ url_for('profil') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-person-badge"></i> Mon profil
+                    <a href="{{ url_for('profil') }}" class="block w-full border-2 border-gray-300 text-gray-700 px-4 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200 text-center mt-3">
+                        <i class="bi bi-person-badge mr-2"></i> Mon profil
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Graphique évolution -->
+<div class="mt-6">
+    <div class="glass rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="bi bi-graph-up mr-2"></i> Évolution des Dons (7 derniers jours)
+                </h2>
+                <a href="{{ url_for('statistiques') }}" class="text-white/90 hover:text-white text-sm font-medium flex items-center bg-white/20 px-3 py-1 rounded-lg hover:bg-white/30 transition-all duration-200">
+                    Voir toutes les stats <i class="bi bi-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+        <div class="p-6">
+            <canvas id="dashboardChart" class="w-full" style="max-height: 250px;"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const evolutionSemaine = {{ evolution_semaine | safe }};
+
+// Générer les 7 derniers jours
+const derniersSept = [];
+for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    derniersSept.push(date.toISOString().split('T')[0]);
+}
+
+// Mapper les données
+const donsSemaine = derniersSept.map(jour => {
+    const found = evolutionSemaine.find(d => d.jour === jour);
+    return found ? found.nombre : 0;
+});
+
+// Créer le graphique
+const ctx = document.getElementById('dashboardChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: derniersSept.map(d => {
+            const date = new Date(d);
+            return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' });
+        }),
+        datasets: [{
+            label: 'Nombre de dons',
+            data: donsSemaine,
+            borderColor: 'rgba(102, 126, 234, 1)',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleColor: '#fff',
+                bodyColor: '#fff'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                },
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+</script>
 {% endblock %}

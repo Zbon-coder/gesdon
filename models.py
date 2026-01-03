@@ -483,3 +483,89 @@ def compter_dons_par_periode(periode):
     finally:
         cursor.close()
         conn.close()
+
+# ========== FONCTIONS POUR STATISTIQUES GRAPHIQUES ==========
+
+def get_dons_par_mois():
+    """Obtenir le nombre de dons par mois pour les 12 derniers mois"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        query = """
+            SELECT
+                FORMAT(date_don, 'yyyy-MM') as mois,
+                COUNT(*) as nombre_dons
+            FROM Don
+            WHERE date_don >= DATEADD(month, -12, GETDATE())
+            GROUP BY FORMAT(date_don, 'yyyy-MM')
+            ORDER BY FORMAT(date_don, 'yyyy-MM')
+        """
+        cursor.execute(query)
+        results = cursor.fetchall()
+        return [{'mois': r[0], 'nombre': r[1]} for r in results]
+    finally:
+        cursor.close()
+        conn.close()
+
+def get_dons_par_association():
+    """Obtenir le nombre de dons par association"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        query = """
+            SELECT
+                a.NomA,
+                COUNT(d.IdD) as nombre_dons
+            FROM Association a
+            LEFT JOIN Don d ON a.IdA = d.IdA
+            GROUP BY a.NomA, a.IdA
+            ORDER BY nombre_dons DESC
+        """
+        cursor.execute(query)
+        results = cursor.fetchall()
+        return [{'nom': r[0], 'nombre': r[1]} for r in results]
+    finally:
+        cursor.close()
+        conn.close()
+
+def get_top_donateurs(limit=10):
+    """Obtenir les top donateurs"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        query = """
+            SELECT TOP (?)
+                don.nom,
+                COUNT(d.IdD) as nombre_dons
+            FROM Donateur don
+            LEFT JOIN Don d ON don.id = d.id
+            GROUP BY don.nom, don.id
+            ORDER BY nombre_dons DESC
+        """
+        cursor.execute(query, (limit,))
+        results = cursor.fetchall()
+        return [{'nom': r[0], 'nombre': r[1]} for r in results]
+    finally:
+        cursor.close()
+        conn.close()
+
+def get_evolution_dons_semaine():
+    """Obtenir l'évolution des dons pour les 7 derniers jours"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        query = """
+            SELECT
+                CAST(date_don AS DATE) as jour,
+                COUNT(*) as nombre_dons
+            FROM Don
+            WHERE date_don >= DATEADD(day, -7, GETDATE())
+            GROUP BY CAST(date_don AS DATE)
+            ORDER BY CAST(date_don AS DATE)
+        """
+        cursor.execute(query)
+        results = cursor.fetchall()
+        return [{'jour': r[0].strftime('%Y-%m-%d') if r[0] else '', 'nombre': r[1]} for r in results]
+    finally:
+        cursor.close()
+        conn.close()

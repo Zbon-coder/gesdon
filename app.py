@@ -71,6 +71,8 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
+    import json
+
     donateurs = models.get_tous_donateurs()
     dons = models.get_tous_dons()
     associations = models.get_toutes_associations()
@@ -83,7 +85,13 @@ def dashboard():
 
     derniers_dons = dons[:5]
 
-    return render_template('dashboard.html', stats=stats, derniers_dons=derniers_dons)
+    # Données pour le graphique
+    evolution_semaine = models.get_evolution_dons_semaine()
+
+    return render_template('dashboard.html',
+                         stats=stats,
+                         derniers_dons=derniers_dons,
+                         evolution_semaine=json.dumps(evolution_semaine))
 
 # ========== ROUTES CRUD ASSOCIATIONS ==========
 
@@ -369,6 +377,35 @@ def profil():
                          stats=stats,
                          derniers_dons=derniers_dons,
                          jours_activite=jours_activite)
+
+# ========== PAGE STATISTIQUES ==========
+
+@app.route('/statistiques')
+@login_required
+def statistiques():
+    import json
+
+    # Récupérer toutes les données statistiques
+    dons_par_mois = models.get_dons_par_mois()
+    dons_par_association = models.get_dons_par_association()
+    top_donateurs = models.get_top_donateurs(10)
+    evolution_semaine = models.get_evolution_dons_semaine()
+
+    # Statistiques générales
+    stats = {
+        'total_dons': models.compter_dons_par_periode('tout'),
+        'total_donateurs': len(models.get_tous_donateurs()),
+        'total_associations': len(models.get_toutes_associations()),
+        'dons_mois': models.compter_dons_par_periode('mois'),
+        'dons_semaine': models.compter_dons_par_periode('semaine')
+    }
+
+    return render_template('statistiques.html',
+                         stats=stats,
+                         dons_par_mois=json.dumps(dons_par_mois),
+                         dons_par_association=json.dumps(dons_par_association),
+                         top_donateurs=json.dumps(top_donateurs),
+                         evolution_semaine=json.dumps(evolution_semaine))
 
 if __name__ == "__main__":
     app.run(debug=True)

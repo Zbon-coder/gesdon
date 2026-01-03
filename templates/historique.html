@@ -1,158 +1,172 @@
 {% extends "base.html" %}
 
-{% block title %}Historique des Dons{% endblock %}
+{% block title %}Historique des Dons - GesDon{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col">
-        <h2 class="text-gradient"><i class="bi bi-clock-history"></i> Historique des Dons</h2>
-        <p class="text-muted">Consultez l'historique complet de tous les dons enregistrés</p>
-    </div>
+<!-- Header -->
+<div class="mb-8">
+    <h1 class="text-4xl font-bold text-white mb-2">
+        <i class="bi bi-clock-history"></i> Historique des Dons
+    </h1>
+    <p class="text-white/80 text-lg">Consultez l'historique complet de tous les dons enregistrés</p>
 </div>
 
 <!-- Statistiques rapides -->
-<div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card stats-card stats-card-primary">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Total des dons</h6>
-                <h2>{{ total_dons }}</h2>
-                <i class="bi bi-gift stats-icon"></i>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="glass rounded-xl p-5 transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-xs uppercase tracking-wide font-medium">Total des dons</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_dons }}</p>
+            </div>
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <i class="bi bi-gift text-white text-xl"></i>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card stats-card stats-card-success">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Ce mois</h6>
-                <h2>{{ dons_mois }}</h2>
-                <i class="bi bi-calendar-check stats-icon"></i>
+
+    <div class="glass rounded-xl p-5 transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-xs uppercase tracking-wide font-medium">Ce mois</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ dons_mois }}</p>
+            </div>
+            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <i class="bi bi-calendar-check text-white text-xl"></i>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card stats-card stats-card-info">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Cette semaine</h6>
-                <h2>{{ dons_semaine }}</h2>
-                <i class="bi bi-calendar-week stats-icon"></i>
+
+    <div class="glass rounded-xl p-5 transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-xs uppercase tracking-wide font-medium">Cette semaine</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ dons_semaine }}</p>
+            </div>
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <i class="bi bi-calendar-week text-white text-xl"></i>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card stats-card stats-card-warning">
-            <div class="card-body position-relative">
-                <h6 class="text-white-50 mb-2">Aujourd'hui</h6>
-                <h2>{{ dons_aujourdhui }}</h2>
-                <i class="bi bi-calendar-day stats-icon"></i>
+
+    <div class="glass rounded-xl p-5 transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-xs uppercase tracking-wide font-medium">Aujourd'hui</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">{{ dons_aujourdhui }}</p>
+            </div>
+            <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                <i class="bi bi-calendar-day text-white text-xl"></i>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Filtres -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="GET" action="{{ url_for('historique') }}" class="row g-3">
-            <div class="col-md-3">
-                <label class="form-label">Période</label>
-                <select name="periode" class="form-select">
-                    <option value="tout" {% if periode == 'tout' %}selected{% endif %}>Tout</option>
-                    <option value="aujourdhui" {% if periode == 'aujourdhui' %}selected{% endif %}>Aujourd'hui</option>
-                    <option value="semaine" {% if periode == 'semaine' %}selected{% endif %}>Cette semaine</option>
-                    <option value="mois" {% if periode == 'mois' %}selected{% endif %}>Ce mois</option>
-                    <option value="annee" {% if periode == 'annee' %}selected{% endif %}>Cette année</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Association</label>
-                <select name="association" class="form-select">
-                    <option value="">Toutes</option>
-                    {% for assoc in associations %}
-                    <option value="{{ assoc.IdA }}" {% if association_filter == assoc.IdA|string %}selected{% endif %}>
-                        {{ assoc.NomA }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Donateur</label>
-                <select name="donateur" class="form-select">
-                    <option value="">Tous</option>
-                    {% for don in donateurs %}
-                    <option value="{{ don.id }}" {% if donateur_filter == don.id|string %}selected{% endif %}>
-                        {{ don.nom }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">&nbsp;</label>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-funnel"></i> Filtrer
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+<div class="glass rounded-2xl shadow-xl p-6 mb-6">
+    <form method="GET" action="{{ url_for('historique') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Période</label>
+            <select name="periode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                <option value="tout" {% if periode == 'tout' %}selected{% endif %}>Tout</option>
+                <option value="aujourdhui" {% if periode == 'aujourdhui' %}selected{% endif %}>Aujourd'hui</option>
+                <option value="semaine" {% if periode == 'semaine' %}selected{% endif %}>Cette semaine</option>
+                <option value="mois" {% if periode == 'mois' %}selected{% endif %}>Ce mois</option>
+                <option value="annee" {% if periode == 'annee' %}selected{% endif %}>Cette année</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Association</label>
+            <select name="association" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                <option value="">Toutes</option>
+                {% for assoc in associations %}
+                <option value="{{ assoc.IdA }}" {% if association_filter == assoc.IdA|string %}selected{% endif %}>
+                    {{ assoc.NomA }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Donateur</label>
+            <select name="donateur" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
+                <option value="">Tous</option>
+                {% for don in donateurs %}
+                <option value="{{ don.id }}" {% if donateur_filter == don.id|string %}selected{% endif %}>
+                    {{ don.nom }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">&nbsp;</label>
+            <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium">
+                <i class="bi bi-funnel mr-2"></i> Filtrer
+            </button>
+        </div>
+    </form>
 </div>
 
 <!-- Timeline des dons -->
-<div class="card">
-    <div class="card-header">
-        <h5><i class="bi bi-list-ul"></i> Chronologie des Dons</h5>
+<div class="glass rounded-2xl shadow-xl overflow-hidden">
+    <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
+        <h2 class="text-xl font-bold text-white flex items-center">
+            <i class="bi bi-list-ul mr-2"></i> Chronologie des Dons
+        </h2>
     </div>
-    <div class="card-body">
+
+    <div class="p-6">
         {% if dons %}
-        <div class="timeline">
-            {% for don in dons %}
-            <div class="timeline-item">
-                <div class="timeline-marker">
-                    <i class="bi bi-gift"></i>
-                </div>
-                <div class="timeline-content">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <h5 class="mb-1">{{ don.libelle }}</h5>
-                            <span class="timeline-date">
-                                <i class="bi bi-calendar3"></i>
-                                {{ don.date_don.strftime('%d/%m/%Y à %H:%M') if don.date_don else '-' }}
-                            </span>
-                        </div>
-                        <div class="text-end">
-                            <a href="{{ url_for('modifier_don', id=don.IdD) }}" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
+        <div class="relative">
+            <!-- Timeline line -->
+            <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-400 to-pink-400"></div>
+
+            <!-- Timeline items -->
+            <div class="space-y-8">
+                {% for don in dons %}
+                <div class="relative pl-20">
+                    <!-- Timeline marker -->
+                    <div class="absolute left-4 w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg ring-4 ring-white">
+                        <i class="bi bi-gift text-white text-sm"></i>
+                    </div>
+
+                    <!-- Content card -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-md hover:shadow-xl transition-all duration-300 transform hover:translate-x-2">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-900">{{ don.libelle }}</h3>
+                                <p class="text-sm text-purple-600 mt-1 flex items-center">
+                                    <i class="bi bi-calendar3 mr-1"></i>
+                                    {{ don.date_don.strftime('%d/%m/%Y à %H:%M') if don.date_don else '-' }}
+                                </p>
+                            </div>
+                            <a href="{{ url_for('modifier_don', id=don.IdD) }}" class="ml-4 px-3 py-1 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors duration-200 text-sm font-medium">
+                                <i class="bi bi-pencil"></i> Modifier
                             </a>
                         </div>
-                    </div>
 
-                    <p class="text-muted mb-2">{{ don.description or 'Aucune description' }}</p>
+                        <p class="text-gray-600 mb-4">{{ don.description or 'Aucune description' }}</p>
 
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-person-fill text-primary me-2"></i>
-                                <span><strong>Donateur:</strong> {{ don.donateur_nom }}</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div class="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-lg">
+                                <i class="bi bi-person-fill text-blue-600"></i>
+                                <span class="text-sm"><span class="font-semibold">Donateur:</span> {{ don.donateur_nom }}</span>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center">
-                                <i class="bi bi-building text-info me-2"></i>
-                                <span><strong>Association:</strong> {{ don.association_nom }}</span>
+                            <div class="flex items-center space-x-2 bg-purple-50 px-3 py-2 rounded-lg">
+                                <i class="bi bi-building text-purple-600"></i>
+                                <span class="text-sm"><span class="font-semibold">Association:</span> {{ don.association_nom }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% else %}
-        <div class="text-center py-5">
-            <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
-            <p class="text-muted mt-3">Aucun don trouvé pour les critères sélectionnés</p>
-            <a href="{{ url_for('ajouter_don') }}" class="btn btn-primary mt-2">
-                <i class="bi bi-plus-circle"></i> Ajouter un don
+        <div class="text-center py-16">
+            <i class="bi bi-inbox text-6xl text-gray-300"></i>
+            <p class="text-gray-500 mt-4 text-lg font-medium">Aucun don trouvé pour les critères sélectionnés</p>
+            <a href="{{ url_for('ajouter_don') }}" class="inline-flex items-center px-6 py-3 mt-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium">
+                <i class="bi bi-plus-circle mr-2"></i> Ajouter un don
             </a>
         </div>
         {% endif %}
