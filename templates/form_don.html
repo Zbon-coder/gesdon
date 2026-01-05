@@ -3,74 +3,167 @@
 {% block title %}{{ 'Modifier' if don else 'Ajouter' }} un Don{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h4>
-                    <i class="bi bi-gift"></i>
-                    {{ 'Modifier' if don else 'Enregistrer' }} un Don
-                </h4>
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <a href="{{ url_for('liste_dons') }}"
+           class="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 mb-4">
+            <i class="bi bi-arrow-left"></i>
+            <span>Retour à la liste</span>
+        </a>
+        <div class="flex items-center gap-4">
+            <div class="bg-white/20 p-4 rounded-xl backdrop-blur-sm">
+                <i class="bi bi-gift text-white text-3xl"></i>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="libelle" class="form-label">Libellé du Don <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="libelle" name="libelle"
-                               value="{{ don.libelle if don else '' }}"
-                               placeholder="Ex: Don mensuel, Don ponctuel, etc." required>
-                    </div>
+            <div>
+                <h2 class="text-3xl font-bold text-white">{{ 'Modifier' if don else 'Enregistrer' }} un Don</h2>
+                <p class="text-purple-100 mt-1">{{ 'Mettez à jour les informations du don' if don else 'Enregistrez un nouveau don reçu' }}</p>
+            </div>
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="IdA" class="form-label">Association Bénéficiaire <span class="text-danger">*</span></label>
-                        <select class="form-select" id="IdA" name="IdA" required>
-                            <option value="">Sélectionner une association</option>
-                            {% for association in associations %}
-                            <option value="{{ association.IdA }}"
-                                    {% if don and don.IdA == association.IdA %}selected{% endif %}>
-                                {{ association.NomA }} - {{ association.ville }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        <small class="text-muted">
-                            Pas dans la liste ?
-                            <a href="{{ url_for('ajouter_association') }}" target="_blank">Ajouter une nouvelle association</a>
-                        </small>
-                    </div>
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-green-600 to-green-700 px-8 py-6">
+            <h3 class="text-xl font-semibold text-white flex items-center gap-2">
+                <i class="bi bi-clipboard-check"></i>
+                Détails du don
+            </h3>
+        </div>
 
-                    <div class="mb-3">
-                        <label for="id_donateur" class="form-label">Donateur <span class="text-danger">*</span></label>
-                        <select class="form-select" id="id_donateur" name="id_donateur" required>
-                            <option value="">Sélectionner un donateur</option>
-                            {% for donateur in donateurs %}
-                            <option value="{{ donateur.id }}"
-                                    {% if don and don.id_donateur == donateur.id %}selected{% endif %}>
-                                {{ donateur.nom }}
-                                {% if donateur.mail %} ({{ donateur.mail }}){% endif %}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        <small class="text-muted">
-                            Pas dans la liste ?
-                            <a href="{{ url_for('ajouter_donateur') }}" target="_blank">Ajouter un nouveau donateur</a>
-                        </small>
+        <form method="POST" class="p-8">
+            <!-- Libellé -->
+            <div class="mb-6">
+                <label for="libelle" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Libellé du Don <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="bi bi-tag text-gray-400"></i>
                     </div>
+                    <input type="text"
+                           id="libelle"
+                           name="libelle"
+                           value="{{ don.libelle if don else '' }}"
+                           placeholder="Ex: Don mensuel, Don ponctuel, Matériel informatique..."
+                           required
+                           class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200 outline-none">
+                </div>
+            </div>
 
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="4"
-                                  placeholder="Détails sur le don...">{{ don.description if don else '' }}</textarea>
+            <!-- Association Bénéficiaire -->
+            <div class="mb-6">
+                <label for="IdA" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Association Bénéficiaire <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                        <i class="bi bi-building text-gray-400"></i>
                     </div>
+                    <select id="IdA"
+                            name="IdA"
+                            required
+                            class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200 outline-none appearance-none bg-white">
+                        <option value="">Sélectionner une association</option>
+                        {% for association in associations %}
+                        <option value="{{ association.IdA }}"
+                                {% if don and don.IdA == association.IdA %}selected{% endif %}>
+                            {{ association.NomA }} - {{ association.ville }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <i class="bi bi-chevron-down text-gray-400"></i>
+                    </div>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">
+                    <i class="bi bi-info-circle text-green-600 mr-1"></i>
+                    Pas dans la liste ?
+                    <a href="{{ url_for('ajouter_association') }}"
+                       target="_blank"
+                       class="text-green-600 hover:text-green-700 font-semibold hover:underline">
+                        Ajouter une nouvelle association
+                    </a>
+                </p>
+            </div>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ url_for('liste_dons') }}" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left"></i> Retour
-                        </a>
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-save"></i> {{ 'Modifier' if don else 'Enregistrer' }}
-                        </button>
+            <!-- Donateur -->
+            <div class="mb-6">
+                <label for="id_donateur" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Donateur <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                        <i class="bi bi-person-circle text-gray-400"></i>
                     </div>
-                </form>
+                    <select id="id_donateur"
+                            name="id_donateur"
+                            required
+                            class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200 outline-none appearance-none bg-white">
+                        <option value="">Sélectionner un donateur</option>
+                        {% for donateur in donateurs %}
+                        <option value="{{ donateur.id }}"
+                                {% if don and don.id_donateur == donateur.id %}selected{% endif %}>
+                            {{ donateur.nom }}
+                            {% if donateur.mail %} ({{ donateur.mail }}){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <i class="bi bi-chevron-down text-gray-400"></i>
+                    </div>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">
+                    <i class="bi bi-info-circle text-green-600 mr-1"></i>
+                    Pas dans la liste ?
+                    <a href="{{ url_for('ajouter_donateur') }}"
+                       target="_blank"
+                       class="text-green-600 hover:text-green-700 font-semibold hover:underline">
+                        Ajouter un nouveau donateur
+                    </a>
+                </p>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-8">
+                <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Description additionnelle
+                </label>
+                <div class="relative">
+                    <textarea id="description"
+                              name="description"
+                              rows="5"
+                              placeholder="Ajoutez des détails supplémentaires sur le don (état, quantité, conditions, etc.)..."
+                              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all duration-200 outline-none resize-none">{{ don.description if don else '' }}</textarea>
+                    <div class="absolute bottom-3 right-3 text-xs text-gray-400">
+                        <i class="bi bi-chat-left-text"></i> Optionnel
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t-2 border-gray-100">
+                <a href="{{ url_for('liste_dons') }}"
+                   class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Annuler</span>
+                </a>
+                <button type="submit"
+                        class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+                    <i class="bi bi-save"></i>
+                    <span>{{ 'Mettre à jour le don' if don else 'Enregistrer le don' }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Info Card -->
+    <div class="mt-6 bg-green-50 border-2 border-green-200 rounded-xl p-6">
+        <div class="flex gap-3">
+            <i class="bi bi-lightbulb text-green-600 text-xl flex-shrink-0"></i>
+            <div>
+                <h4 class="font-semibold text-green-900 mb-1">Conseil</h4>
+                <p class="text-green-700 text-sm">Assurez-vous que l'association bénéficiaire et le donateur sont correctement sélectionnés. La date du don sera automatiquement enregistrée au moment de la sauvegarde.</p>
             </div>
         </div>
     </div>

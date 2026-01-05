@@ -3,61 +3,151 @@
 {% block title %}{{ 'Modifier' if donateur else 'Ajouter' }} un Donateur{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4>
-                    <i class="bi bi-person"></i>
-                    {{ 'Modifier' if donateur else 'Ajouter' }} un Donateur
-                </h4>
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <a href="{{ url_for('liste_donateurs') }}"
+           class="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors duration-200 mb-4">
+            <i class="bi bi-arrow-left"></i>
+            <span>Retour à la liste</span>
+        </a>
+        <div class="flex items-center gap-4">
+            <div class="bg-white/20 p-4 rounded-xl backdrop-blur-sm">
+                <i class="bi bi-person text-white text-3xl"></i>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">Nom Complet <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="nom" name="nom"
-                               value="{{ donateur.nom if donateur else '' }}"
-                               placeholder="Ex: Dupont Jean" required>
-                    </div>
+            <div>
+                <h2 class="text-3xl font-bold text-white">{{ 'Modifier' if donateur else 'Ajouter' }} un Donateur</h2>
+                <p class="text-purple-100 mt-1">{{ 'Mettez à jour les informations du donateur' if donateur else 'Remplissez les informations du nouveau donateur' }}</p>
+            </div>
+        </div>
+    </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="tel" class="form-label">Téléphone</label>
-                            <input type="tel" class="form-control" id="tel" name="tel"
-                                   value="{{ donateur.tel if donateur else '' }}"
-                                   placeholder="+229 61 23 45 67">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="mail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="mail" name="mail"
-                                   value="{{ donateur.mail if donateur else '' }}">
-                        </div>
-                    </div>
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-8 py-6">
+            <h3 class="text-xl font-semibold text-white flex items-center gap-2">
+                <i class="bi bi-info-circle"></i>
+                Informations du donateur
+            </h3>
+        </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="BP" class="form-label">Boîte Postale (BP)</label>
-                            <input type="text" class="form-control" id="BP" name="BP"
-                                   value="{{ donateur.BP if donateur else '' }}"
-                                   placeholder="BP 123">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="ville" class="form-label">Ville</label>
-                            <input type="text" class="form-control" id="ville" name="ville"
-                                   value="{{ donateur.ville if donateur else '' }}">
-                        </div>
+        <form method="POST" class="p-8">
+            <!-- Nom Complet -->
+            <div class="mb-6">
+                <label for="nom" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Nom Complet <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="bi bi-person text-gray-400"></i>
                     </div>
+                    <input type="text"
+                           id="nom"
+                           name="nom"
+                           value="{{ donateur.nom if donateur else '' }}"
+                           placeholder="Ex: Dupont Jean"
+                           required
+                           class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 outline-none">
+                </div>
+            </div>
 
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ url_for('liste_donateurs') }}" class="btn btn-secondary">
-                            <i class="bi bi-arrow-left"></i> Retour
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> {{ 'Modifier' if donateur else 'Ajouter' }}
-                        </button>
+            <!-- Téléphone et Email -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="tel" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Téléphone
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="bi bi-telephone text-gray-400"></i>
+                        </div>
+                        <input type="tel"
+                               id="tel"
+                               name="tel"
+                               value="{{ donateur.tel if donateur else '' }}"
+                               placeholder="+229 61 23 45 67"
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 outline-none">
                     </div>
-                </form>
+                </div>
+
+                <div>
+                    <label for="mail" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Email
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="bi bi-envelope text-gray-400"></i>
+                        </div>
+                        <input type="email"
+                               id="mail"
+                               name="mail"
+                               value="{{ donateur.mail if donateur else '' }}"
+                               placeholder="exemple@email.com"
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BP et Ville -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="BP" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Boîte Postale (BP)
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="bi bi-mailbox text-gray-400"></i>
+                        </div>
+                        <input type="text"
+                               id="BP"
+                               name="BP"
+                               value="{{ donateur.BP if donateur else '' }}"
+                               placeholder="BP 123"
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="ville" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Ville
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="bi bi-geo-alt text-gray-400"></i>
+                        </div>
+                        <input type="text"
+                               id="ville"
+                               name="ville"
+                               value="{{ donateur.ville if donateur else '' }}"
+                               placeholder="Ex: Cotonou"
+                               class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-200 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row justify-between gap-4 pt-6 border-t-2 border-gray-100">
+                <a href="{{ url_for('liste_donateurs') }}"
+                   class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all duration-200">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Annuler</span>
+                </a>
+                <button type="submit"
+                        class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+                    <i class="bi bi-save"></i>
+                    <span>{{ 'Mettre à jour' if donateur else 'Enregistrer' }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Info Card -->
+    <div class="mt-6 bg-purple-50 border-2 border-purple-200 rounded-xl p-6">
+        <div class="flex gap-3">
+            <i class="bi bi-info-circle text-purple-600 text-xl flex-shrink-0"></i>
+            <div>
+                <h4 class="font-semibold text-purple-900 mb-1">Information</h4>
+                <p class="text-purple-700 text-sm">Les champs marqués d'un astérisque (<span class="text-red-500">*</span>) sont obligatoires. Les autres informations sont optionnelles mais recommandées pour un meilleur suivi.</p>
             </div>
         </div>
     </div>

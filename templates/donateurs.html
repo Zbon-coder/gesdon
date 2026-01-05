@@ -3,60 +3,115 @@
 {% block title %}Liste des Donateurs{% endblock %}
 
 {% block content %}
-<div class="row mb-3">
-    <div class="col">
-        <h2><i class="bi bi-people"></i> Liste des Donateurs</h2>
-    </div>
-    <div class="col text-end">
-        <a href="{{ url_for('ajouter_donateur') }}" class="btn btn-primary">
-            <i class="bi bi-person-plus"></i> Ajouter un donateur
+<div class="mb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h2 class="text-3xl font-bold text-white flex items-center gap-3">
+                <span class="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                    <i class="bi bi-people text-white"></i>
+                </span>
+                Liste des Donateurs
+            </h2>
+            <p class="text-purple-100 mt-2 ml-1">Gérez les informations de vos donateurs</p>
+        </div>
+        <a href="{{ url_for('ajouter_donateur') }}"
+           class="inline-flex items-center gap-2 px-6 py-3 bg-white text-purple-600 font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+            <i class="bi bi-person-plus text-lg"></i>
+            <span>Ajouter un donateur</span>
         </a>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        {% if donateurs %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Téléphone</th>
-                        <th>Email</th>
-                        <th>BP</th>
-                        <th>Ville</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for donateur in donateurs %}
-                    <tr>
-                        <td>{{ donateur.id }}</td>
-                        <td><strong>{{ donateur.nom }}</strong></td>
-                        <td>{{ donateur.tel }}</td>
-                        <td>{{ donateur.mail }}</td>
-                        <td>{{ donateur.BP }}</td>
-                        <td>{{ donateur.ville }}</td>
-                        <td>
-                            <a href="{{ url_for('modifier_donateur', id=donateur.id) }}" class="btn btn-sm btn-warning">
+<div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+    {% if donateurs %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gradient-to-r from-purple-600 to-purple-700">
+                <tr>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">ID</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Nom</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Téléphone</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Email</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">BP</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Ville</th>
+                    <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for donateur in donateurs %}
+                <tr class="hover:bg-purple-50 transition-colors duration-150">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-semibold">
+                            #{{ donateur.id }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">{{ donateur.nom[0].upper() }}</span>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">{{ donateur.nom }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {% if donateur.tel %}
+                            <i class="bi bi-telephone text-purple-600 mr-2"></i>{{ donateur.tel }}
+                        {% else %}
+                            <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {% if donateur.mail %}
+                            <i class="bi bi-envelope text-purple-600 mr-2"></i>{{ donateur.mail }}
+                        {% else %}
+                            <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {{ donateur.BP if donateur.BP else '-' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                        {% if donateur.ville %}
+                            <i class="bi bi-geo-alt text-purple-600 mr-2"></i>{{ donateur.ville }}
+                        {% else %}
+                            <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <a href="{{ url_for('modifier_donateur', id=donateur.id) }}"
+                               class="inline-flex items-center justify-center w-9 h-9 bg-amber-100 text-amber-600 rounded-lg hover:bg-amber-200 hover:scale-110 transition-all duration-200"
+                               title="Modifier">
                                 <i class="bi bi-pencil"></i>
                             </a>
                             <a href="{{ url_for('supprimer_donateur', id=donateur.id) }}"
-                               class="btn btn-sm btn-danger"
-                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce donateur ?')">
+                               class="inline-flex items-center justify-center w-9 h-9 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 hover:scale-110 transition-all duration-200"
+                               onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce donateur ?')"
+                               title="Supprimer">
                                 <i class="bi bi-trash"></i>
                             </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <p class="text-center text-muted">Aucun donateur enregistré</p>
-        {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    {% else %}
+    <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full mb-4">
+            <i class="bi bi-people text-4xl text-purple-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun donateur enregistré</h3>
+        <p class="text-gray-500 mb-6">Commencez par ajouter votre premier donateur</p>
+        <a href="{{ url_for('ajouter_donateur') }}"
+           class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-700 hover:shadow-xl transition-all duration-200">
+            <i class="bi bi-person-plus"></i>
+            <span>Ajouter un donateur</span>
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
